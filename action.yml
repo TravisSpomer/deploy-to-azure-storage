@@ -1,0 +1,16 @@
+name: Deploy to Azure Storage
+description: Deploys a static website to an Azure Storage account.
+author: TravisSpomer
+inputs:
+  source-path:
+    description: 'The location of your built site files. (For example, "out".)'
+    required: true
+  sas-url:
+    description: 'A SAS URL for your storage account. (You should store this in a Secret.)'
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'
+branding:
+  icon: upload-cloud
+  color: gray-dark
