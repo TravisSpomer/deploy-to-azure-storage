@@ -12,7 +12,7 @@ A GitHub Action that deploys a static website to an Azure Storage account.
 
 ## Usage
 
-Here's an example of how to use the action in your workflow. If you have a repo that uses Node.js to create files in the "build" folder and your default branch is called `master`, you can add it as-is to your project with no changes.
+Here's an example of how to use the action in your workflow. If you have a repo that uses Node.js to create files in the "build" folder and the branch you want to publish from is your default, you can add it as-is to your project with no changes.
 
 **.github/workflows/deploy.yml**
 
@@ -22,7 +22,7 @@ name: Deploy website
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ $default-branch ]
 
 jobs:
   build-and-deploy:
