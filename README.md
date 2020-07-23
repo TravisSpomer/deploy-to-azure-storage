@@ -16,7 +16,7 @@ Make sure you reference this Action in your workflow *after* the static site fil
 Here's an example of how to use the action in your workflow:
 
 ```yaml
-uses: actions/deploy-to-azure-storage@v1
+uses: TravisSpomer/deploy-to-azure-storage@v1
 with:
   source-path: out
   sas-url: ${{ secrets.DEPLOY_SAS_URL }}
@@ -89,8 +89,12 @@ jobs:
         npm run build
         
     - name: Deploy to Azure
-      uses: actions/deploy-to-azure-storage@v1
+      uses: TravisSpomer/deploy-to-azure-storage@v1
       with:
-        source-path: out
+        source-path: build
         sas-url: ${{ secrets.DEPLOY_SAS_URL }}
 ```
+
+---
+
+This action is © 2020 Travis Spomer but released to the public domain under the [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0) license. This license does not apply to external libraries referenced by this action; only the action itself. It is provided as-is and no warranties are made as to its functionality or suitability.
