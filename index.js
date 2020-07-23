@@ -12,11 +12,16 @@ const DeployToAzureStorage = async () =>
 	{
 		const sourcePath = core.getInput("source-path")
 		const sasUrl = core.getInput("sas-url")
+		const container = core.getInput("container")
+		const requireIndex = core.getInput("require-index")
 
-		if (!fs.existsSync(path.join(sourcePath, "index.html")))
+		if (requireIndex)
 		{
-			core.setFailed(`The source path "${sourcePath}" doesn't contain an index.html file. It should be set to the directory containing already-built static website files.`)
-			return
+			if (!fs.existsSync(path.join(sourcePath, "index.html")))
+			{
+				core.setFailed(`The source path "${sourcePath}" doesn't contain an index.html file. It should be set to the directory containing already-built static website files.`)
+				return
+			}
 		}
 
 		const urlEndOfHost = sasUrl.indexOf("/?")
@@ -27,7 +32,7 @@ const DeployToAzureStorage = async () =>
 		}
 		const urlHost = sasUrl.substring(0, urlEndOfHost + 1)
 		const urlQuery = sasUrl.substring(urlEndOfHost + 2)
-		const destUrl = `${urlHost}$web?${urlQuery}`
+		const destUrl = `${urlHost}${container}?${urlQuery}`
 		core.setSecret(urlQuery)
 
 		const azCopyCommand = (process.platform === "win32") ? "azcopy" : "azcopy10"
