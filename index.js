@@ -12,6 +12,7 @@ const DeployToAzureStorage = async () =>
 	{
 		const sourcePath = core.getInput("source-path")
 		const sasUrl = core.getInput("sas-url")
+		const cleanup = core.getInput("cleanup")
 		const container = core.getInput("container")
 		const requireIndex = core.getInput("require-index")
 
@@ -46,14 +47,17 @@ const DeployToAzureStorage = async () =>
 		}
 		core.endGroup()
 
-		core.startGroup("Clean up obsolete files")
-		errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, "--delete-destination=true"])
-		if (errorCode)
+		if (cleanup)
 		{
-			core.setFailed("Cleanup failed. See log for more details.")
-			return
+			core.startGroup("Clean up obsolete files")
+			errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, "--delete-destination=true"])
+			if (errorCode)
+			{
+				core.setFailed("Cleanup failed. See log for more details.")
+				return
+			}
+			core.endGroup()
 		}
-		core.endGroup()
 
 		core.info("")
 		core.info("------------------------------------------------------------")

@@ -8,6 +8,10 @@ inputs:
   sas-url:
     description: 'A SAS URL for your storage account. (You should store this in a Secret.)'
     required: true
+  cleanup:
+    description: 'Whether or not old versions of files should be deleted.'
+    required: false
+    default: true
   container:
     description: 'The name of the storage container to use. Defaults to $web.'
     required: false

@@ -10,7 +10,7 @@ A GitHub Action that deploys a static website to an Azure Storage account.
 	* You can disable the `$web` requirement for unusual deployment scenarios using `require-index: false`.
 * A SAS URL for your storage account with a long expiration time and write access to the account.
 
-## Configuration
+## Usage
 
 Here's an example of how to use the action in your workflow. If you have a repo that uses Node.js to create files in the "build" folder and your default branch is called `master`, you can add it as-is to your project with no changes.
 
@@ -51,7 +51,7 @@ jobs:
 
 Then, you'd create a Secret in your repo with the name `DEPLOY_SAS_URL` and a value like "`https://mystorage.blob.core.windows.net/?sv=2020-...%3D`".
 
-#### How to get a SAS URL and save it
+### How to get a SAS URL and save it
 
 1. Open the Azure Portal and locate the storage account that you want to deploy your website to.
 2. Choose "Shared access signature" in the navigation bar.
@@ -68,6 +68,8 @@ Then, you'd create a Secret in your repo with the name `DEPLOY_SAS_URL` and a va
 	* Value: (paste the SAS URL from step 5)
 8. Click "Add secret".
 
+## Options
+
 ### `source-path`
 
 *Required.* The location of your built site files, relative to the root of the repo.
@@ -80,6 +82,14 @@ For example, for a [Next.js site exported with `next export`](https://nextjs.org
 
 *Important:* Don't include a SAS URL in your workflow file directly, or anyone who reads your source code could access and change your storage account! Instead, store it in a Secret (see below) and reference it in your workflow.
 
+### `cleanup`
+
+Optional: defaults to `true`. If `false`, files that exist on the storage container that aren't in `source-path` *won't* be removed.
+
+```yaml
+cleanup: false
+```
+
 ### `container`
 
 Optional; defaults to `$web`. The name of the storage container to use. You'd only change this parameter if you have a deployment scenario that uses Azure Blob Storage but *not* the static website feature.
@@ -90,7 +100,7 @@ container: assets
 
 ### `require-index`
 
-Optional; defaults to `true`. If false, the normal check to verify that `source-path` contains an `index.html` at the root will be disabled. Only useful in unusual deployment scenarios, such as if you have configured a different name for your default document.
+Optional; defaults to `true`. If `false`, the normal check to verify that `source-path` contains an `index.html` at the root will be disabled. Only useful in unusual deployment scenarios, such as if you have configured a different name for your default document.
 
 ```yaml
 require-index: false
@@ -98,9 +108,11 @@ require-index: false
 
 ## How it works
 
+**Using this action will completely replace the contents of your storage account's `$web` container.**
+
 When it executes, this action uses the [AzCopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10) tool to sync your built files to your storage account.
 
-It does so in two passes: first, it copies over all new and updated files. (A file is considered updated if its modified date is different.) Then, in the second pass, it removes any existing files that are not in the built source. **Using this action will completely replace the contents of your storage account's `$web` container.**
+It does so in two passes: first, it copies over all new and updated files. (A file is considered updated if its modified date is different.) Then, in the second pass, it removes any existing files that are not in the built source. (You can skip the second pass by using `cleanup: false`.)
 
 ---
 
