@@ -7,7 +7,7 @@
 	"author": "Travis Spomer (https://github.com/TravisSpomer)",
 	"license": "CC0-1.0",
 	"dependencies": {
-		"@actions/core": "^1.2.4",
+		"@actions/core": "^1.2.6",
 		"@actions/exec": "^1.0.4"
 	}
 }
