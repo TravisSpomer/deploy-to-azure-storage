@@ -1,6 +1,6 @@
 {
 	"name": "deploy-to-azure-storage",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Deploy to Azure Storage",
 	"main": "index.js",
 	"scripts": {},
