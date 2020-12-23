@@ -1,10 +1,10 @@
 {
 	"name": "deploy-to-azure-storage",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Deploy to Azure Storage",
 	"main": "index.js",
 	"scripts": {},
-	"author": "Travis Spomer",
+	"author": "Travis Spomer (https://github.com/TravisSpomer)",
 	"license": "CC0-1.0",
 	"dependencies": {
 		"@actions/core": "^1.2.4",

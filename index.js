@@ -6,15 +6,24 @@ const process = require("process")
 const core = require("@actions/core")
 const exec = require("@actions/exec")
 
+const toBoolean = (str) =>
+{
+	if (str === true || str === 1) return true
+	const lower = typeof(str) === "string" ? str.toLowerCase() : ""
+	if (isString && lower === "true") return true
+	if (!str || (isString && lower === "false")) return false
+	throw new Error("Your whimsical input couldn't be converted to a Boolean.")
+}
+
 const DeployToAzureStorage = async () =>
 {
 	try
 	{
-		const sourcePath = core.getInput("source-path")
-		const sasUrl = core.getInput("sas-url")
-		const cleanup = core.getInput("cleanup")
+		const sourcePath = core.getInput("source-path", { required: true })
+		const sasUrl = core.getInput("sas-url", { required: true })
+		const cleanup = toBoolean(core.getInput("cleanup"))
 		const container = core.getInput("container")
-		const requireIndex = core.getInput("require-index")
+		const requireIndex = toBoolean(core.getInput("require-index"))
 
 		if (requireIndex)
 		{
