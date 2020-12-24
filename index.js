@@ -10,8 +10,8 @@ const toBoolean = (str) =>
 {
 	if (str === true || str === 1) return true
 	const lower = typeof(str) === "string" ? str.toLowerCase() : ""
-	if (isString && lower === "true") return true
-	if (!str || (isString && lower === "false")) return false
+	if (lower === "true") return true
+	if (!str || lower === "false") return false
 	throw new Error("Your whimsical input couldn't be converted to a Boolean.")
 }
 
