@@ -17,7 +17,7 @@ inputs:
     required: false
     default: '$web'
   require-index:
-    description: 'If true, the action will require index.html to be present in source-path, to help you make sure that you're supplying the right path. Defaults to true.'
+    description: 'If true, the action will require index.html to be present in source-path, to help you make sure that you are supplying the right path. Defaults to true.'
     required: false
     default: true
 runs:
