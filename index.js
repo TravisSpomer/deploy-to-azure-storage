@@ -63,7 +63,7 @@ const DeployToAzureStorage = async () =>
 		core.startGroup("Deploy new and updated files")
 		if (immutableExt)
 		{
-			errorCode = await exec.exec(azCopyCommand, ["copy", sourcePath, destUrl, ...commonFlags, "--recursive" , ...includeFlags, ...cacheControlFlags])
+			errorCode = await exec.exec(azCopyCommand, ["copy", `${sourcePath}/*`, destUrl, ...commonFlags, "--recursive" , ...includeFlags, ...cacheControlFlags])
 			if (errorCode)
 			{
 				core.setFailed("Deployment failed for immutable files. See log for more details.")
