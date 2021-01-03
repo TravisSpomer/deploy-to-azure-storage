@@ -107,7 +107,7 @@ Optional; defaults to empty. A list of extensions in the format `*.js;*.css` tha
 If this setting is left out or empty, no special cache control settings are used. Extensions should be listed as a semicolon-separated list of wildcard patterns with no spaces.
 
 ```yaml
-immutable: *.js;*.css
+immutable: "*.js;*.css"
 ```
 
 ### `require-index`
