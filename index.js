@@ -55,7 +55,7 @@ const DeployToAzureStorage = async () =>
 
 		const azCopyCommand = (process.platform === "win32") ? "azcopy" : "azcopy10"
 		const commonFlags = []
-		const cacheControlFlags = ['--cache-control', '"max-age=31536000, immutable"']
+		const cacheControlFlags = ["--cache-control", "max-age=31536000, immutable"]
 		const includeFlags = immutableExt ? ["--include-pattern", immutableExt] : []
 		const excludeFlags = immutableExt ? ["--exclude-pattern", immutableExt] : []
 		let errorCode
