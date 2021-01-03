@@ -12,18 +12,20 @@ const toBoolean = (str) =>
 	const lower = typeof(str) === "string" ? str.toLowerCase() : ""
 	if (lower === "true") return true
 	if (!str || lower === "false") return false
-	throw new Error("Your whimsical input couldn't be converted to a Boolean.")
+	throw new Error(`Your whimsical input "${str}" couldn't be converted to a Boolean.`)
 }
 
 const DeployToAzureStorage = async () =>
 {
 	try
 	{
+		// Defaults for these settings are defined in action.yml.
 		const sourcePath = core.getInput("source-path", { required: true })
 		const sasUrl = core.getInput("sas-url", { required: true })
 		const cleanup = toBoolean(core.getInput("cleanup"))
 		const container = core.getInput("container")
 		const requireIndex = toBoolean(core.getInput("require-index"))
+		const immutableExt = core.getInput("immutable") || null
 
 		if (requireIndex)
 		{
@@ -32,6 +34,12 @@ const DeployToAzureStorage = async () =>
 				core.setFailed(`The source path "${sourcePath}" doesn't contain an index.html file. It should be set to the directory containing already-built static website files.`)
 				return
 			}
+		}
+
+		if (immutableExt && (!immutableExt.startsWith("*") || immutableExt.indexOf(" ") >= 0))
+		{
+			core.setFailed(`The list of immutable extensions should be in this format with no spaces: "*.js;*.css"`)
+			return
 		}
 
 		const urlEndOfHost = sasUrl.indexOf("/?")
@@ -46,9 +54,23 @@ const DeployToAzureStorage = async () =>
 		core.setSecret(urlQuery)
 
 		const azCopyCommand = (process.platform === "win32") ? "azcopy" : "azcopy10"
+		const commonFlags = null
+		const cacheControlFlags = ['--cache-control', '"max-age=31536000, immutable"']
+		const includeFlags = immutableExt ? ["--include-pattern", immutableExt] : null
+		const excludeFlags = immutableExt ? ["--exclude-pattern", immutableExt] : null
+		let errorCode
 
 		core.startGroup("Deploy new and updated files")
-		let errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl])
+		if (immutableExt)
+		{
+			errorCode = await exec.exec(azCopyCommand, ["copy", sourcePath, destUrl, ...commonFlags, ...includeFlags, ...cacheControlFlags])
+			if (errorCode)
+			{
+				core.setFailed("Deployment failed for immutable files. See log for more details.")
+				return
+			}
+		}
+		errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, ...commonFlags, ...excludeFlags])
 		if (errorCode)
 		{
 			core.setFailed("Deployment failed. See log for more details.")
@@ -59,7 +81,7 @@ const DeployToAzureStorage = async () =>
 		if (cleanup)
 		{
 			core.startGroup("Clean up obsolete files")
-			errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, "--delete-destination=true"])
+			errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, ...commonFlags, "--delete-destination=true"])
 			if (errorCode)
 			{
 				core.setFailed("Cleanup failed. See log for more details.")

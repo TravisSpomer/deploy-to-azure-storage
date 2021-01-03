@@ -20,6 +20,10 @@ inputs:
     description: 'If true, the action will require index.html to be present in source-path, to help you make sure that you are supplying the right path. Defaults to true.'
     required: false
     default: true
+  immutable:
+    description: 'An optional list of extensions that should be uploaded with cache control settings indicating that the file is immutable, in the format "*.js;*.css".'
+    required: false
+    default: ''
 runs:
   using: 'node12'
   main: 'index.js'

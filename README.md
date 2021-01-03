@@ -7,7 +7,7 @@ A GitHub Action that deploys a static website to an Azure Storage account.
 * A GitHub Actions workflow that builds your static website.
 	* This action is not a static site generator tool—you need to have already set one up before using this, unless your repo already contains a folder of static files.
 * An Azure Storage account with the "static website" feature enabled. (That is, it has a `$web` container.)
-	* You can disable the `$web` requirement for unusual deployment scenarios using `require-index: false`.
+	* You can disable the `$web` requirement for unusual deployment scenarios using `container: assets, require-index: false`.
 * A SAS URL for your storage account with a long expiration time and write access to the account.
 
 ## Usage
@@ -22,7 +22,7 @@ name: Deploy website
 on:
   workflow_dispatch:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
 
 jobs:
   build-and-deploy:
@@ -56,7 +56,7 @@ Then, you'd create a Secret in your repo with the name `DEPLOY_SAS_URL` and a va
 1. Open the Azure Portal and locate the storage account that you want to deploy your website to.
 2. Choose "Shared access signature" in the navigation bar.
 3. At minimum, choose:
-	1. Allowed services; Blob
+	1. Allowed services: Blob
 	2. Allowed resource types: all
 	3. Allowed permissions: all
 	4. Start and expiry date/time: something far in the future, like 10 years from now
@@ -98,6 +98,18 @@ Optional; defaults to `$web`. The name of the storage container to use. You'd on
 container: assets
 ```
 
+### `immutable`
+
+Optional; defaults to empty. A list of extensions in the format `*.js;*.css` that should be uploaded with [Cache-Control](https://csswizardry.com/2019/03/cache-control-for-civilians/) settings indicating that the file is immutable.
+
+*Important:* Only use this if you are "cache-busting" files of those types by including a timestamp or thumbprint in the filename itself. For example, `site.2dff0abe.js`. Otherwise, CDNs and browsers will go *a year* between checking for updates to the file.
+
+If this setting is left out or empty, no special cache control settings are used. Extensions should be listed as a semicolon-separated list of wildcard patterns with no spaces.
+
+```yaml
+immutable: *.js;*.css
+```
+
 ### `require-index`
 
 Optional; defaults to `true`. If `false`, the normal check to verify that `source-path` contains an `index.html` at the root will be disabled. Only useful in unusual deployment scenarios, such as if you have configured a different name for your default document.
@@ -116,4 +128,4 @@ It does so in two passes: first, it copies over all new and updated files. (A fi
 
 ---
 
-This action is © 2020 Travis Spomer but released to the public domain under the [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0) license. This license does not apply to external libraries referenced by this action; only the action itself. It is provided as-is and no warranties are made as to its functionality or suitability.
+This action is © 2020-2021 Travis Spomer but released to the public domain under the [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0) license. This license does not apply to external libraries referenced by this action; only the action itself. It is provided as-is and no warranties are made as to its functionality or suitability.
