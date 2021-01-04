@@ -1,6 +1,6 @@
 {
 	"name": "deploy-to-azure-storage",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"description": "Deploy to Azure Storage GitHub Action",
 	"main": "index.js",
 	"scripts": {},
