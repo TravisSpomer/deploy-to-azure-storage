@@ -26,6 +26,7 @@ const DeployToAzureStorage = async () =>
 		const container = core.getInput("container")
 		const requireIndex = toBoolean(core.getInput("require-index"))
 		const immutableExt = core.getInput("immutable") || null
+		const cleanupImmutable  = toBoolean(core.getInput("cleanup-immutable")) && cleanup && immutableExt
 
 		if (requireIndex)
 		{
@@ -58,6 +59,7 @@ const DeployToAzureStorage = async () =>
 		const cacheControlFlags = ["--cache-control", "max-age=31536000, immutable"]
 		const includeFlags = immutableExt ? ["--include-pattern", immutableExt] : []
 		const excludeFlags = immutableExt ? ["--exclude-pattern", immutableExt] : []
+		const cleanupFlags = ["--delete-destination=true", ...(cleanupImmutable ? [] : excludeFlags)]
 		let errorCode
 
 		core.startGroup("Deploy new and updated files")
@@ -81,7 +83,7 @@ const DeployToAzureStorage = async () =>
 		if (cleanup)
 		{
 			core.startGroup("Clean up obsolete files")
-			errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, ...commonFlags, "--delete-destination=true"])
+			errorCode = await exec.exec(azCopyCommand, ["sync", sourcePath, destUrl, ...commonFlags, ...cleanupFlags])
 			if (errorCode)
 			{
 				core.setFailed("Cleanup failed. See log for more details.")

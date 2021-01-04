@@ -86,6 +86,8 @@ For example, for a [Next.js site exported with `next export`](https://nextjs.org
 
 Optional: defaults to `true`. If `false`, files that exist on the storage container that aren't in `source-path` *won't* be removed.
 
+If `immutable` is used, files with those extensions will be left there by default. If you want to clean up those too, also specify `cleanup-immutable: true`.
+
 ```yaml
 cleanup: false
 ```
@@ -106,9 +108,21 @@ Optional; defaults to empty. A list of extensions in the format `*.js;*.css` tha
 
 If this setting is left out or empty, no special cache control settings are used. Extensions should be listed as a semicolon-separated list of wildcard patterns with no spaces.
 
+These files are ignored by `cleanup` unless you also specify `cleanup-immutable: true`.
+
 ```yaml
 immutable: "*.js;*.css"
 ```
+
+### `cleanup-immutable`
+
+Optional; defaults to `false`. If using `cleanup` and `immutable`, setting `cleanup-immutable` to `true` will cause immutable files to be cleaned up too.
+
+* If `cleanup` is `false`: This setting is ignored.
+* If `immutable` is empty: This setting is ignored.
+* If `immutable` is not empty and `cleanup` is true:
+	* If `cleanup-immutable` is `true`: Remove all leftover files in the storage container, including the immutable ones.
+	* If `cleanup-immutable` is `false`: Remove all leftover files in the storage container *except* the immutable ones.
 
 ### `require-index`
 
