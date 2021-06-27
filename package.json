@@ -1,13 +1,13 @@
 {
 	"name": "deploy-to-azure-storage",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"description": "Deploy to Azure Storage GitHub Action",
 	"main": "index.js",
 	"scripts": {},
 	"author": "Travis Spomer (https://github.com/TravisSpomer)",
 	"license": "CC0-1.0",
 	"dependencies": {
-		"@actions/core": "^1.2.6",
-		"@actions/exec": "^1.0.4"
+		"@actions/core": "^1.4.0",
+		"@actions/exec": "^1.1.0"
 	}
 }

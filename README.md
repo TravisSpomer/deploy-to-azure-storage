@@ -43,7 +43,7 @@ jobs:
         npm run build
         
     - name: Deploy to Azure
-      uses: TravisSpomer/deploy-to-azure-storage@v1.3.0
+      uses: TravisSpomer/deploy-to-azure-storage@v1.4.0
       with:
         source-path: build
         sas-url: ${{ secrets.DEPLOY_SAS_URL }}
