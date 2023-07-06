@@ -30,12 +30,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       
     - name: Install Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: 12.x
+        node-version: 16
       
     - name: Build website
       run: |
@@ -43,7 +43,7 @@ jobs:
         npm run build
         
     - name: Deploy to Azure
-      uses: TravisSpomer/deploy-to-azure-storage@v1.4.0
+      uses: TravisSpomer/deploy-to-azure-storage@v1.5.0
       with:
         source-path: build
         sas-url: ${{ secrets.DEPLOY_SAS_URL }}
@@ -142,4 +142,4 @@ It does so in two passes: first, it copies over all new and updated files. (A fi
 
 ---
 
-This action is © 2020-2021 Travis Spomer but released to the public domain under the [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0) license. This license does not apply to external libraries referenced by this action; only the action itself. It is provided as-is and no warranties are made as to its functionality or suitability.
+This action is © 2020-2023 Travis Spomer but released to the public domain under the [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0) license. This license does not apply to external libraries referenced by this action; only the action itself. It is provided as-is and no warranties are made as to its functionality or suitability.
